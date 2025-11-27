@@ -155,15 +155,24 @@ Tests each allocator in a separate forked process to ensure:
 
 **Best-Fit Allocator:**
 ```
-Blocks (n)   Tree Height   Expected log₂(n)   Ratio
-100          5             6.64               0.75
-200          6             7.64               0.78
-400          7             8.64               0.81
-800          7             9.64               0.73
-1600         8             10.64              0.75
-3200         9             11.64              0.77
-6400         9             12.64              0.71
-12800        10            13.64              0.73
+Blocks (n)   Avg Time (μs)  Tree Height   Expected log₂(n)   Ratio
+100          1.866           5             6.64               0.75
+200          0.251           6             7.64               0.78
+400          0.263           7             8.64               0.81
+800          0.300           8             9.64               0.83
+1600         0.320           8             10.64              0.75
+3200         0.343           9             11.64              0.77
+6400         0.369           10            12.64              0.79
+12800        0.419           10            13.64              0.73
+
+Time growth analysis:
+  n: 100 -> 200 (×2.0): time ×0.13
+  n: 200 -> 400 (×2.0): time ×1.05
+  n: 400 -> 800 (×2.0): time ×1.14
+  n: 800 -> 1600 (×2.0): time ×1.07
+  n: 1600 -> 3200 (×2.0): time ×1.07
+  n: 3200 -> 6400 (×2.0): time ×1.08
+  n: 6400 -> 12800 (×2.0): time ×1.14
 
 ✓ CONCLUSION: BEST-FIT ALLOCATOR demonstrates O(log n) complexity
   - Tree remains balanced (AVL property maintained)
@@ -172,15 +181,24 @@ Blocks (n)   Tree Height   Expected log₂(n)   Ratio
 
 **Worst-Fit Allocator:**
 ```
-Blocks (n)   Tree Height   Expected log₂(n)   Ratio
-100          6             6.64               0.90
-200          7             7.64               0.92
-400          8             8.64               0.93
-800          9             9.64               0.93
-1600         11            10.64              1.03
-3200         12            11.64              1.03
-6400         13            12.64              1.03
-12800        14            13.64              1.03
+Blocks (n)   Avg Time (μs)  Tree Height   Expected log₂(n)   Ratio
+100          0.248           6             6.64               0.90
+200          0.313           7             7.64               0.92
+400          0.296           8             8.64               0.93
+800          0.436           9             9.64               0.93
+1600         0.469           10            10.64              0.94
+3200         0.484           12            11.64              1.03
+6400         0.601           13            12.64              1.03
+12800        0.622           14            13.64              1.03
+
+Time growth analysis:
+  n: 100 -> 200 (×2.0): time ×1.26
+  n: 200 -> 400 (×2.0): time ×0.95
+  n: 400 -> 800 (×2.0): time ×1.47
+  n: 800 -> 1600 (×2.0): time ×1.08
+  n: 1600 -> 3200 (×2.0): time ×1.03
+  n: 3200 -> 6400 (×2.0): time ×1.24
+  n: 6400 -> 12800 (×2.0): time ×1.03
 
 ✓ CONCLUSION: WORST-FIT ALLOCATOR demonstrates O(log n) complexity
   - Tree remains balanced (AVL property maintained)
@@ -188,7 +206,7 @@ Blocks (n)   Tree Height   Expected log₂(n)   Ratio
 ```
 
 **Time Complexity Verification:**
-- When n doubles (×2.0), time increases by only ~1.0-1.3× 
+- When n doubles (×2.0), time increases by only ~1.0-1.5× 
 - This is **logarithmic growth**, not linear (which would be ×2.0)
 - All growth checks show ✓ O(log n)
 
